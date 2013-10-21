@@ -1,19 +1,9 @@
 module Acpas
-  module API
+  class API
     module Environments
-
-      class Live
-        def self.endpoint
-          'https://secure.acpas.co.za/wsIntegration/externalintegration.asmx'
-        end
-      end
-
-      class Test
-        def self.endpoint
-          'http://test.acpas.co.za/wsIntegration/externalintegration.asmx'
-        end
-      end
-
+      extend ActiveSupport::Autoload
+      autoload :Live
+      autoload :Test
     end
   end
 end

@@ -1,8 +1,11 @@
 require 'active_attr'
 module Acpas
-  module API
+  class API
     class Vendor
-      attr_accessor :username, :password, :branch_id
+      include ActiveAttr::Attributes
+      attribute :username
+      attribute :password
+      attribute :branch_id
       include ActiveAttr::MassAssignment
     end
   end

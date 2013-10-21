@@ -1,8 +1,12 @@
+require 'active_support'
 require 'active_attr'
+require 'savon'
 
 module Acpas
-  module API
+  class API
+    include ActiveAttr::MassAssignment
     extend ActiveSupport::Autoload
+    extend Savon::Model
 
     # ---
     
@@ -12,11 +16,17 @@ module Acpas
     # ---
 
     autoload :Environments
-    cattr_accessor :environment
-    def self.environment= env
-      raise Errors::EnvironmentError.new "Invalid environment: #{env}" unless env.respond_to?(:endpoint)
-      super env
-      client wsdl: env.endpoint + '?WSDL'
+    class << self
+      def environment= env
+        ActiveSupport::Inflector.tap do |inflector|
+          env = inflector.constantize("Acpas::API::Environments::#{inflector.classify(env.to_s)}").new
+        end if env.is_a?(Symbol)
+
+        raise Errors::EnvironmentError.new "Invalid environment: #{env}" unless env.respond_to?(:endpoint)
+        @environment = env
+        client wsdl: env.endpoint + '?WSDL'
+      end
+      attr_reader :environment
     end
 
     # ---
@@ -33,21 +43,21 @@ module Acpas
 
     # ---
 
-    autoload :Operation
-    def operation action, parameters={}
-      Operation::Base.new(client: client, action: action, parameters: parameters).tap do |o|
-        o.perform vendor_credentials.merge(parameters)
-      end
-    end
-    def boolean_operation action, parameters={}
-      operation(action, parameters).becomes(Operation::Boolean)
+    autoload :Response
+    def request action, parameters={}
+      raise Errors::ClientError.new "No valid SOAP client." unless client
+      response = client.call action, vendor_credentials.merge(parameters)
+      Response.new(action: action, body: response)
     end
 
     # ---
 
-    include ActiveAttr::MassAssignment
-
   end
 end
 
+
+# Acpas::API.environment = :test
+# api = Acpas::API.new(username: 'x', password: 'y')
+# response = api.request :insert_new_customer, { }
+# response.result # => '1'
 

@@ -1,5 +1,5 @@
 module Acpas
-  module API
+  class API
     module VERSION
       MAJOR = 0
       MINOR = 0
