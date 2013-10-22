@@ -70,7 +70,6 @@ describe Acpas::API do
       it { expect(request.action).to equal method }
       it { expect(request.body) == 'ok' }
     end
-   
+
   end
-      it {binding.pry}
 end
