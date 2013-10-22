@@ -8,7 +8,7 @@ module Acpas
       attr_reader :result
       def result
         unless @result
-          @result ||= body[:"#{action}_response"][:"#{action}_result"]
+          @result ||= body.body[:"#{action}_response"][:"#{action}_result"]
           handle_result
         end
         @result

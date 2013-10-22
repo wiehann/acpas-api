@@ -63,7 +63,7 @@ describe Acpas::API do
       let(:method) { :method }
       let(:parameters) {{ param1: true }}
       let(:client) { double(call: 'ok') }
-      before { expect(client).to receive(:call).with(method, vendor_credentials.merge(parameters)) }
+      before { expect(client).to receive(:call).with(method, { message: vendor_credentials.merge(parameters) }) }
       before { subject.stub(client: client ) }
       let(:request) { subject.request(method, parameters) }
       it { expect(request).to be_a(Acpas::API::Response) }
@@ -72,4 +72,5 @@ describe Acpas::API do
     end
 
   end
+
 end

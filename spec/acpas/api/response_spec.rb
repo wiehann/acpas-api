@@ -5,7 +5,7 @@ describe Acpas::API::Response do
   describe '#result' do
     before do
       subject.action = :action
-      subject.body = { action_response: { action_result: 'success' }}
+      subject.body = double(body: { action_response: { action_result: 'success' }})
     end
     its(:result) { should == 'success' }
     describe '#handle_result' do

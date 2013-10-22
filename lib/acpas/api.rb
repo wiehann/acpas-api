@@ -46,7 +46,7 @@ module Acpas
     autoload :Response
     def request action, parameters={}
       raise Errors::ClientError.new "No valid SOAP client." unless client
-      response = client.call action, vendor_credentials.merge(parameters)
+      response = client.call action, message: vendor_credentials.merge(parameters)
       Response.new(action: action, body: response)
     end
 
