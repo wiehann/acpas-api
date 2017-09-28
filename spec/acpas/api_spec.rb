@@ -32,8 +32,8 @@ describe Acpas::API do
     end
 
     context 'when a symbol' do
-      before { subject.environment = :test }
-      its(:environment) { should be_a Acpas::API::Environments::Test }
+      before { subject.environment = :beta }
+      its(:environment) { should be_a Acpas::API::Environments::Betum }
     end
   end
 
